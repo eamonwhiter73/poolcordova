@@ -1,0 +1,24 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    }
+  },
+  "dependent_plugins": {}
+}
