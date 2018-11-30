@@ -86,11 +86,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		gs7Icn8qoF9nGDXbPnL4hOb5wtA=
+		d7LWclii7OFLIH0DzyoXo7ku1Vw=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		Ctz9TxuUt952neMqkn0qKyXQB34=
+		rZJFbRUT6dVuIy5FqclKjguhKGc=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -98,7 +98,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		giIY5IhSgdixCSEz2abMfOmpauY=
+		JyzZeOlbWrPYZ3BUnJbtLCliOCY=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -170,7 +170,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		vGE0GfDGPmIdCbftaoqoJpvvdHY=
+		Z4Ul28StwotlKu4wslN4H54kon0=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -6230,7 +6230,7 @@
 		</data>
 		<key>www/css/index.css</key>
 		<data>
-		GuguDKBqcIOsHd9f2wrZ/qimDtM=
+		k87R/YgRVMnRUjuyxIEcSu7vBiU=
 		</data>
 		<key>www/css/modules/tabbar.css</key>
 		<data>
@@ -6242,7 +6242,7 @@
 		</data>
 		<key>www/css/share.css</key>
 		<data>
-		FNaFAMRsVgnv2QhC7jAA9piKj7I=
+		MPXmTf/Crx4pLWQsmK3fKtpTdfk=
 		</data>
 		<key>www/img/logo.png</key>
 		<data>
@@ -6266,7 +6266,7 @@
 		</data>
 		<key>www/js/share.js</key>
 		<data>
-		k9E4teOBb3t/k4mvG4mx4QWoS9k=
+		4gwV5lQYCEJobzU+LQHp1uSaJk4=
 		</data>
 		<key>www/plugins/cordova-plugin-camera/www/Camera.js</key>
 		<data>
@@ -6603,22 +6603,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gs7Icn8qoF9nGDXbPnL4hOb5wtA=
+			d7LWclii7OFLIH0DzyoXo7ku1Vw=
 			</data>
 			<key>hash2</key>
 			<data>
-			wxf8W4dOfhuHk+JrGPB+u7N0HBi4MVWhXs7AJ3CzkVQ=
+			cHu25ZTZmGWeNWhMHFHL1wOO7amBUn4cL8WPQUdqz+I=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Ctz9TxuUt952neMqkn0qKyXQB34=
+			rZJFbRUT6dVuIy5FqclKjguhKGc=
 			</data>
 			<key>hash2</key>
 			<data>
-			maZ6x9Qsu5f40ih3y6TZpDrzLdNcONCS66lwN99wDlw=
+			Zjovu1nkP2MokNhzBYpk/BWPRif+H6sVAG30scyYIjU=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -6636,11 +6636,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			giIY5IhSgdixCSEz2abMfOmpauY=
+			JyzZeOlbWrPYZ3BUnJbtLCliOCY=
 			</data>
 			<key>hash2</key>
 			<data>
-			RnQqCTsNSVCkaDTraG7EgJNzQ1frKQXDHFR90LOYCsc=
+			SpRTWpkOemDDlEao9lsIShddAyiTMfuoql7bsCFr5FA=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -6823,11 +6823,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			vGE0GfDGPmIdCbftaoqoJpvvdHY=
+			Z4Ul28StwotlKu4wslN4H54kon0=
 			</data>
 			<key>hash2</key>
 			<data>
-			nL1e1sXZiKG76CDNduUgJ72+Ro5Wbn0wyWEMA9QXuLc=
+			pVXXxCOTSmyFMcMmGNzFNRvmsa16YcDotEG0ZI7LXO4=
 			</data>
 		</dict>
 		<key>config.xml</key>
@@ -23477,11 +23477,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			GuguDKBqcIOsHd9f2wrZ/qimDtM=
+			k87R/YgRVMnRUjuyxIEcSu7vBiU=
 			</data>
 			<key>hash2</key>
 			<data>
-			GMw0BQYY7yp7pA6j+SwPL9JhBzgQzFN54M8hPXEW9hE=
+			Xs1d18RfQLnYdg3O0CQyP7pUbwNTE0QFR2E05U6UZT4=
 			</data>
 		</dict>
 		<key>www/css/modules/tabbar.css</key>
@@ -23510,11 +23510,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			FNaFAMRsVgnv2QhC7jAA9piKj7I=
+			MPXmTf/Crx4pLWQsmK3fKtpTdfk=
 			</data>
 			<key>hash2</key>
 			<data>
-			EV2PQ2rAwxDRoj6kCFV+jCB2up/hx47WzJgVYaMTCYs=
+			3boUmeorCavjY3K+gRzRUg71RZwaYY3lkIJPEp2a4E8=
 			</data>
 		</dict>
 		<key>www/img/logo.png</key>
@@ -23576,11 +23576,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			k9E4teOBb3t/k4mvG4mx4QWoS9k=
+			4gwV5lQYCEJobzU+LQHp1uSaJk4=
 			</data>
 			<key>hash2</key>
 			<data>
-			bKqWnBeWWBlydkxI4AV+gf4MDX3mHZMpOIUvaolVobw=
+			tljPqUc2o1yGaX6bzre22CSGiOFKztku5+D30MlYr40=
 			</data>
 		</dict>
 		<key>www/plugins/cordova-plugin-camera/www/Camera.js</key>

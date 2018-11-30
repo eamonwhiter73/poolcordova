@@ -2,6 +2,10 @@
 	height: auto;
 }
 
+#item_name_input, #description_text_area {
+	font-size: 14px;
+}
+
 .switch {
 	position: relative;
   display: inline-block;

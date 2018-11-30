@@ -50,7 +50,6 @@ function Share() {
 		descriptionTextArea.rows = "2";
 		descriptionTextArea.cols = "50";
 		descriptionTextArea.id = "description_text_area";
-		descriptionTextArea.style.fontSize = "12px";
 
 		var shareAvailable = document.createElement("h3");
 		shareAvailable.style.display = "flex";
@@ -102,7 +101,6 @@ function Share() {
 		itemInput.style.lineHeight = "2em";
 		itemInput.name = "item_name_input";
 		itemInput.id = "item_name_input";
-		itemInput.style.fontSize = "12px";
 
 		container.appendChild(picContainer);
 
@@ -142,14 +140,12 @@ function Share() {
     targetContainer.appendChild(document.importNode(document.querySelector("#share>#container"), true));
     setTimeout(function() {
     	scrollPage();
-    },2000);
+    }, 1000);
 	};
 
 	const scrollPage = function() {
-		var myElement = document.getElementById('description_container');
-		var topPos = myElement.offsetTop;
-
-		document.querySelector("html").scrollTop = topPos;
+		console.log("scrolling page");
+		document.body.scrollTop = document.body.scrollHeight - window.innerHeight;
 	};
 		/*var timerID = setInterval(function() {
 	    window.scrollBy(0, 5);
