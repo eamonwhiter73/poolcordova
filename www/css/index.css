@@ -20,17 +20,24 @@
     font-family: "avenir";
 }
 
+html {
+    height: 100vh;
+    overflow: auto;
+}
+
 body {
     width: 98%;
     height: 100%;
     background-color: purple;
-    margin: 0px 0px 64px 0px;
+    margin: 0px 0px 0px 0px;
+    /*overflow: auto;*/
 }
 
 /* Portrait layout (default) */
 .app {
     width: 101.9%;
     background-color: black;
+    padding-bottom: 64px;
 }
 
 /* Landscape layout (with min-width) */

@@ -17,7 +17,6 @@ function Tabbar() {
 
 	this.navigate = function(event) {
 		if(event.target.id == "tab_0") {
-			document.getElementById("tabbar").style.display = "none";
 			navigator.camera.getPicture(cameraSuccess, cameraError, {
 				quality: 20, 
 				destinationType: Camera.DestinationType.FILE_URI,
@@ -30,7 +29,6 @@ function Tabbar() {
 	}
 
 	const cameraSuccess = function(uri) {
-		document.getElementById("tabbar").style.display = "flex";
 		window.share.setPicture(uri);
 		window.share.showShare();
 	}
