@@ -20,6 +20,19 @@ var pool = null;
 var tabbar = null;
 var share = null;
 
+// Initialize Firebase
+// TODO: Replace with your project's customized code snippet
+var config = {
+    apiKey: "AIzaSyAKDvrOB3Fi8-4V5xGHtD546WYqcT1Vbek",
+    authDomain: "pool-3f2de.firebaseapp.com",
+    databaseURL: "https://pool-3f2de.firebaseio.com",
+    projectId: "pool-3f2de",
+    storageBucket: "pool-3f2de.appspot.com",
+    messagingSenderId: "843791335284",
+};
+
+firebase.initializeApp(config);
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -37,7 +50,7 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
-        
+
         tabbar = new Tabbar();
         tabbar.initialize();
         

@@ -1,11 +1,12 @@
 function Share() {
 	this.data = {
-		picture: null,
+		uri: null,
 		available: false,
 		description: "Description here..."
 	};
 	
 	this.initialize = function() {
+
 		var share = document.getElementById("share");
 		
 		var container = document.createElement("div");
@@ -17,7 +18,7 @@ function Share() {
 
 		var picContainer = document.createElement("div");
 		picContainer.style.display = "flex";
-		picContainer.style.flex = "0"
+		picContainer.style.flex = "0";
 		picContainer.style.flexDirection = "column";
 		picContainer.id = "pic_container";
 
@@ -102,6 +103,18 @@ function Share() {
 		itemInput.name = "item_name_input";
 		itemInput.id = "item_name_input";
 
+		var submitButton = document.createElement("div");
+		submitButton.style.display = "flex";
+		submitButton.style.width = "361px";
+		submitButton.style.height = "64px";
+		submitButton.style.backgroundColor = "green";
+		submitButton.innerHTML = "SUBMIT";
+		submitButton.style.justifyContent = "center";
+		submitButton.style.alignItems = "center";
+		submitButton.style.marginTop = "10px";
+		submitButton.id = "submit_button";
+		submitButton.setAttribute("ontouchstart", "window.share.submitShare(event)", false);
+
 		container.appendChild(picContainer);
 
 		switchLabel.appendChild(switchInput);
@@ -110,6 +123,7 @@ function Share() {
 		toggleContainer.appendChild(shareAvailable);
 		toggleContainer.appendChild(switchLabel);
 		toggleContainer.appendChild(shareNotAvailable);
+		toggleContainer.style.padding = "10px";
 		container.appendChild(toggleContainer);
 
 		itemContainer.appendChild(itemLabel);
@@ -118,12 +132,77 @@ function Share() {
 
 		descriptionContainer.appendChild(descriptionLabel);
 		descriptionContainer.appendChild(descriptionTextArea);
+		descriptionContainer.appendChild(submitButton);
+		descriptionContainer.style.paddingBottom = "10px";
 		container.appendChild(descriptionContainer);
 
 		share.appendChild(container);
 	};
 
+	this.submitShare = function(event) {
+		resolveLocalFileSystemURL(this.data.uri, function(entry) {
+	    entry.file(function (file) {
+         var reader = new FileReader();
+         reader.onloadend = function () {
+	          // This blob object can be saved to firebase
+	          var blob = new Blob([new Uint8Array(this.result)], { type: "image/jpeg" });                  
+	          sendToFirebase(blob);
+         };
+         
+         reader.readAsArrayBuffer(file);
+      });
+	  }, function (error) {
+	    console.log(error);
+	  });
+	};
+
+	const generateUUID = function() { // Public Domain/MIT
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+        d += performance.now(); //use high-precision timer if available
+    }
+    
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+	};
+
+	const sendToFirebase = function(blob) {
+		var storageRef = firebase.storage().ref();
+		var uploadTask = storageRef.child('share_images/'+generateUUID()+'.jpg').put(blob);
+
+    // Register three observers:
+		// 1. 'state_changed' observer, called any time the state changes
+		// 2. Error observer, called on failure
+		// 3. Completion observer, called on successful completion
+		uploadTask.on('state_changed', function(snapshot){
+		  // Observe state change events such as progress, pause, and resume
+		  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+		  var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		  console.log('Upload is ' + progress + '% done');
+		  switch (snapshot.state) {
+		    case firebase.storage.TaskState.PAUSED: // or 'paused'
+		      console.log('Upload is paused');
+		      break;
+		    case firebase.storage.TaskState.RUNNING: // or 'running'
+		      console.log('Upload is running');
+		      break;
+		  }
+		}, function(error) {
+		  // Handle unsuccessful uploads
+		}, function() {
+		  // Handle successful uploads on complete
+		  // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+		  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+		    console.log('File available at', downloadURL);
+		  });
+		});
+	};
+
 	this.setPicture = function(uri) {
+		this.data.uri = uri;
 		var picContainer = document.querySelector("#share>#container>#pic_container");
 
 		var image = document.createElement("img");

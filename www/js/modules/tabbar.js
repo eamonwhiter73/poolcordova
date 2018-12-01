@@ -22,6 +22,11 @@ function Tabbar() {
 				destinationType: Camera.DestinationType.FILE_URI,
 				sourceType:Camera.PictureSourceType.CAMERA
 			});
+
+			document.getElementById("tab_0").style.pointerEvents = "none";
+		}
+		else {
+			document.getElementById("tab_0").style.pointerEvents = "auto";
 		}
 
 		event.preventDefault();
@@ -34,7 +39,6 @@ function Tabbar() {
 	}
 
 	const cameraError = function(err) {
-		document.getElementById("tabbar").style.display = "flex";
 		alert(err);
 	}
 

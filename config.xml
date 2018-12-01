@@ -38,6 +38,7 @@
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarBackgroundColor" value="#bfbfbf" />
         <preference name="StatusBarDefaultScrollToTop" value="false" />
+        <resource-file src="GoogleService-Info.plist" />
     </platform>
     <preference name="BackupWebStorage" value="local" />
     <preference name="DisallowOverscroll" value="true" />
