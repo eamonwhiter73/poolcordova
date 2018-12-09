@@ -1,11 +1,12 @@
 function Share() {
 	this.data = {
 		uri: null,
-		available: false,
-		description: "Description here..."
+		item_name: null,
+		description_text: null,
+		available: true
 	};
 	
-	this.initialize = function() {
+	this.initialize = async function() {
 
 		var share = document.getElementById("share");
 		
@@ -15,6 +16,11 @@ function Share() {
 		container.style.display = "flex";
 		container.style.flexDirection = "column";
 		container.id = "container";
+
+		/*var form = document.createElement("form");
+		form.action = "";
+		form.id = "share_form";
+		form.setAttribute("onsubmit", "window.share.submitShare(event)");*/
 
 		var picContainer = document.createElement("div");
 		picContainer.style.display = "flex";
@@ -43,7 +49,6 @@ function Share() {
 		descriptionLabel.style.flex = "0";
 		descriptionLabel.style.margin = "0em 0em 0em 0em";
 		descriptionLabel.innerText = "Description";
-		//descriptionLabel.style.justifyContent = "flex-start";
 		descriptionLabel.style.alignItems = "center";
 		descriptionLabel.id = "description_label";
 
@@ -51,6 +56,9 @@ function Share() {
 		descriptionTextArea.rows = "2";
 		descriptionTextArea.cols = "50";
 		descriptionTextArea.id = "description_text_area";
+		descriptionTextArea.name = "description_text_area_name";
+		descriptionTextArea.placeholder = "Item description...";
+		descriptionTextArea.setAttribute("onchange", "window.share.textAreaChange(this.value)", false);
 
 		var shareAvailable = document.createElement("h3");
 		shareAvailable.style.display = "flex";
@@ -75,6 +83,9 @@ function Share() {
 
 		var switchInput = document.createElement("input");
 		switchInput.type = "checkbox";
+		switchInput.name = "toggle";
+		switchInput.id = "toggle";
+		switchInput.setAttribute("onchange", "window.share.availableChange(this.value)", false);
 
 		var sliderSpan = document.createElement("span");
 		sliderSpan.className = "slider";
@@ -100,10 +111,13 @@ function Share() {
 		itemInput.type = "text";
 		itemInput.size = "50";
 		itemInput.style.lineHeight = "2em";
-		itemInput.name = "item_name_input";
+		itemInput.name = "item_name_input_name";
 		itemInput.id = "item_name_input";
+		itemInput.placeholder = "Name of item...";
+		itemInput.setAttribute("onchange", "window.share.inputItemNameChange(this.value)", false);
 
-		var submitButton = document.createElement("div");
+		var submitButton = document.createElement("button");
+		submitButton.style.borderRadius = "0px";
 		submitButton.style.display = "flex";
 		submitButton.style.width = "361px";
 		submitButton.style.height = "64px";
@@ -124,27 +138,60 @@ function Share() {
 		toggleContainer.appendChild(switchLabel);
 		toggleContainer.appendChild(shareNotAvailable);
 		toggleContainer.style.padding = "10px";
+		//form.appendChild(toggleContainer);
 		container.appendChild(toggleContainer);
 
 		itemContainer.appendChild(itemLabel);
 		itemContainer.appendChild(itemInput);
+		//form.appendChild(itemContainer);
 		container.appendChild(itemContainer);
 
 		descriptionContainer.appendChild(descriptionLabel);
 		descriptionContainer.appendChild(descriptionTextArea);
 		descriptionContainer.appendChild(submitButton);
 		descriptionContainer.style.paddingBottom = "10px";
+		//form.appendChild(descriptionContainer);
 		container.appendChild(descriptionContainer);
 
+		//container.appendChild(form);
+
 		share.appendChild(container);
+		return;
+
+		/*$("#item_name_input").change(function() {
+			console.log("in item_name change");
+		  this.data.item_name = $(this).val();
+		});
+
+		$("#description_text").change(function() {
+			console.log("in description_text change");
+			this.data.description_text = $(this).val(); 
+		}*/
 	};
 
+	this.textAreaChange = function(value) {
+		this.data.description_text = value;
+	}
+
+	this.inputItemNameChange = function(value) {
+		this.data.item_name = value;
+	}
+
+	this.availableChange = function(value) {
+		this.data.available = value;
+	}
+
 	this.submitShare = function(event) {
-		alert("in submit share");
+		//event.preventDefault();
+		//var item_name = $("#item_name_input").attr("value");
+    //var description_text = $("#description_text_area").attr("value"); // TEST THIS OUT FIRST THING TOMMORROW, JUST RUN IT!!!!!!!!!!!!!
+		if(this.data.item_name == null || this.data.description_text == null) {
+			alert("You need to fill out all of the fields");
+			return;
+		}
+
 		resolveLocalFileSystemURL(this.data.uri, function(entry) {
-			alert("in resolveLocalFileSystemURL");
 	    entry.file(function (file) {
-	    	alert("in FileReader");
          var reader = new FileReader();
          reader.onloadend = function () {
 	          // This blob object can be saved to firebase
@@ -173,8 +220,11 @@ function Share() {
 	};
 
 	const sendToFirebase = function(blob) {
+		var date = new Date().getTime();
 		var storageRef = firebase.storage().ref();
-		var uploadTask = storageRef.child('share_images/'+generateUUID()+'.jpg').put(blob);
+		//var item_name = document.getElementById("item_name_input").value;
+		//var description_text = document.getElementById("description_text_area").value;
+		var uploadTask = storageRef.child('share_images/'+window.user.uid+'/'+date+'.jpg').put(blob);
 
     // Register three observers:
 		// 1. 'state_changed' observer, called any time the state changes
@@ -200,6 +250,25 @@ function Share() {
 		  // For instance, get the download URL: https://firebasestorage.googleapis.com/...
 		  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
 		    console.log('File available at', downloadURL);
+		    // Initialize Cloud Firestore through Firebase
+				var db = firebase.firestore();
+
+				// Disable deprecated features
+				db.settings({
+				  timestampsInSnapshots: true
+				});
+
+				// Add a new document in collection "cities"
+				db.collection("shares").doc(window.user.uid).collection("data").doc(date).set({date: date, downloadURL: downloadURL, item: this.data.item_name, description: this.date.description_text, available: this.data.available})
+					.then(function() {
+				    console.log("Document successfully written!");
+				    this.data.item_name = null;
+				    this.data.description_text = null;
+				    this.data.available = true;
+					})
+					.catch(function(error) {
+				    console.error("Error writing document: ", error);
+					});
 		  });
 		});
 	};
@@ -217,23 +286,23 @@ function Share() {
 	};
 
 	this.showShare = function() {
+		self = this;
 		var targetContainer = document.querySelector(".app");
 		targetContainer.innerHTML = "";
     targetContainer.appendChild(document.importNode(document.querySelector("#share>#container"), true));
     setTimeout(function() {
     	scrollPage();
     }, 1000);
+
+    firebase.auth().onAuthStateChanged(function(user) {
+		  if (user) {
+		    self.data.user = user;
+		  }
+		});
 	};
 
 	const scrollPage = function() {
 		console.log("scrolling page");
 		document.body.scrollTop = document.body.scrollHeight - window.innerHeight;
 	};
-		/*var timerID = setInterval(function() {
-	    window.scrollBy(0, 5);
-
-	    if( window.pageYOffset >= document.body.scrollHeight - window.innerHeight ) {
-	      clearInterval(timerID);
-	    }
-		}, 13);*/
 }

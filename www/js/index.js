@@ -19,6 +19,8 @@
 var pool = null;
 var tabbar = null;
 var share = null;
+var signin = null;
+var user = null;
 
 // Initialize Firebase
 // TODO: Replace with your project's customized code snippet
@@ -51,14 +53,22 @@ var app = {
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
 
-        tabbar = new Tabbar();
-        tabbar.initialize();
-        
-        pool = new Pool();
-        pool.populate();
+        universalLinks.subscribe(null, function (eventData) {
+          // do some work
+            console.log('Did launch application from the link: ' + eventData.url);
+        });
 
-        share = new Share();
-        share.initialize();
+        tabbar = new Tabbar();
+        tabbar.initialize().then(function() {
+            pool = new Pool();
+            pool.initialize().then(function() {
+                share = new Share();
+                share.initialize().then(function() {
+                    signin = new SignIn();
+                    signin.initialize();
+                });
+            });
+        });
     }
 };
 

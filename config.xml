@@ -42,8 +42,21 @@
     </platform>
     <preference name="BackupWebStorage" value="local" />
     <preference name="DisallowOverscroll" value="true" />
+    <universal-links>
+        <host name="eamonpool.page.link" scheme="https" />
+        <host name="pool-3f2de.firebaseapp.com" scheme="https">
+            <path url="/__/auth/callback" />
+        </host>
+    </universal-links>
     <plugin name="cordova-plugin-file" spec="6.0.1" />
     <plugin name="cordova-plugin-camera" spec="4.0.3" />
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
+    <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
+    <plugin name="cordova-plugin-buildinfo" spec="2.0.2" />
+    <plugin name="cordova-plugin-browsertab" spec="0.2.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
+        <variable name="URL_SCHEME" value="com.eamon.pool" />
+    </plugin>
     <engine name="ios" spec="^4.5.5" />
 </widget>

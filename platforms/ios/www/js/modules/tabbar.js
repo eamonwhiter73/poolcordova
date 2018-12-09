@@ -1,5 +1,6 @@
 function Tabbar() {
-	this.initialize = function() {
+	this.initialize = async function() {
+		alert("beginning to create tabbar");
 		var tabbar = document.createElement("div");
 		tabbar.style.position = "fixed";
 		tabbar.style.display = "flex";
@@ -10,8 +11,9 @@ function Tabbar() {
 		tabbar.style.zIndex = "999";
 		tabbar.id = "tabbar";
 
-		createTab(tabbar).then(function(tabbar) {
+		await createTab(tabbar).then(function(tabbar) {
     	document.body.appendChild(tabbar);
+    	return;
 		});
 	};
 

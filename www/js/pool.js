@@ -3,10 +3,62 @@ function Pool() {
 									 {name: "Iron", pic: cordova.file.applicationDirectory + "www/assets/images/two.png", available: true}, {name: "Pot", pic: cordova.file.applicationDirectory + "www/assets/images/two.png", available: true},
 									 {name: "Stapler", pic: cordova.file.applicationDirectory + "www/assets/images/three.png", available: true}, {name: "Frying pan", pic: cordova.file.applicationDirectory + "www/assets/images/four.png", available: true},
 									 {name: "Sugar", pic: cordova.file.applicationDirectory + "www/assets/images/four.png", available: true}, {name: "Tape", pic: cordova.file.applicationDirectory + "www/assets/images/one.png", available: true}];
+	
+	this.total_rows = 1;
+	this.total_boxes = 0;
+	this.debounce_timer = null;
+	this.lastY = 0;
+	this.interval = null;
+	this.dragStartTime = null;
 
-	this.createBoxes = async function(pool) {
-		var row_counter = 0;
-		for (var i = 1; i < this.fake_data.length + 1; i++) {
+	this.initialize = async function() { //MAKE ASYNC!!!!!!!!!!!!!!!!!!!
+		var pool = document.getElementById("pool");
+
+		console.log("pool retreived from template");
+
+		var container = document.createElement("div");
+		container.style.height = (window.innerHeight - 64)+"px";
+		container.style.backgroundColor = "blue";
+		container.style.display = "flex";
+		container.style.flexDirection = "column";
+		container.style.overflow = "auto";
+		container.id = "container";
+		container.setAttribute("ontouchmove", "window.pool.dragging(event)");
+		container.setAttribute("ontouchend", "window.pool.endDrag(event)");
+		container.setAttribute("ontouchstart", "window.pool.startDrag(event)");
+		container.setAttribute("ontouchcancel", "window.pool.handleCancel(event)");
+		container.setAttribute("onscroll", "window.pool.loadMore(event)");
+
+		console.log("pool container created");
+
+		var row = document.createElement("div");
+		row.style.display = "flex";
+		row.style.flexDirection = "row";
+		row.style.flex = "1 0 200px";
+		row.style.backgroundColor = "green";
+		row.className = "row";
+		row.id = "row_0";
+
+		console.log("pool row added");
+
+		container.appendChild(row);
+		pool.appendChild(container);
+
+		console.log("pool container added");
+		return;
+	}
+
+	this.createBoxes = async function(load) {
+		//var row_counter = 0;
+		var pool_var = null;
+		if(load) {
+			pool_var = document.querySelector(".app>#container");
+		}
+		else {
+			pool_var = document.querySelector("#pool>#container");
+		}
+
+		for (var i = 1; (i * this.total_rows) < (9 * this.total_rows); i++) {
 
 			var item_box = document.createElement("div");
 			item_box.style.flex = "1 0 50%";
@@ -15,7 +67,7 @@ function Pool() {
 			item_box.style.justifyContent = "flex-end";
 			item_box.style.borderBottom="2px solid #9a9a9a";
 			item_box.style.background = "no-repeat center/100% url("+this.fake_data[i - 1].pic+")";
-			item_box.id = "item_box_"+i;
+			item_box.id = "item_box_"+this.total_boxes;
 
 			var colors = ["#e0e0e0", "#bfbfbf"];
 
@@ -28,54 +80,124 @@ function Pool() {
 			item_name.style.alignItems = "center";
 			item_name.style.margin = "0em 0em 0em 0em";
 			item_name.innerText = this.fake_data[i - 1].name;
-			item_name.id = "item_name_"+i;
+			item_name.id = "item_name_"+this.total_boxes;
 			
 			item_box.appendChild(item_name);
 
-			this_row = document.getElementsByClassName("row")[row_counter];
-			this_row.appendChild(item_box);
+			//console.log("this_total_rows before getting this_row: "+this.total_rows);
 
-			if(i % 2 == 0 && i != this.fake_data.length) {				
+			pool_var.getElementsByClassName("row")[this.total_rows - 1].appendChild(item_box);
+			//console.dir(pool_var.getElementsByClassName("row")[this.total_rows - 1]);
+
+			this.total_boxes++;
+			//console.log("total_boxes: "+this.total_boxes);
+
+			//console.log("i: "+i);
+
+			if(i % 2 == 0) {				
 				var inner_row = document.createElement("div");
 				inner_row.style.display = "flex";
 				inner_row.style.flexDirection = "row";
 				inner_row.style.flex = "1 0 200px";
 				inner_row.style.backgroundColor = "green";
 				inner_row.className = "row";
+				inner_row.id = "row_"+this.total_rows
 
-				pool.appendChild(inner_row);
+				pool_var.appendChild(inner_row);
 
-				row_counter++;
+				//row_counter++;
+				this.total_rows++;
+				//console.log("this_total_rows: "+this.total_rows);
 			}
-			else if(i == this.fake_data.length) {
-				return pool;
+			else if(i == 8) {
+				//console.log("entered ending else if");
+				return;
 			}
 		}
 	}
 
-	this.populate = function() {
-		var pool = document.getElementById("pool");
+	this.handleCancel = function(event) {
+	  evt.preventDefault();
+	  console.log("touchcancel");
+	  var touches = evt.changedTouches;
+	  
+	  for (var i = 0; i < touches.length; i++) {
+	    var idx = ongoingTouchIndexById(touches[i].identifier);
+	    ongoingTouches.splice(idx, 1);  // remove it; we're done
+	  }
+	}
 
-		var container = document.createElement("div");
-		container.style.flex = "1";
-		container.style.backgroundColor = "blue";
-		container.style.display = "flex";
-		container.style.flexDirection = "column";
-		container.id = "container";
+	var setTimedInterval = function(callback, delay, timeout){
+		window.clearInterval(this.interval);
+    this.interval=window.setInterval(callback, delay);
+    window.setTimeout(function(){
+        window.clearInterval(this.interval);
+    }, timeout);
+	}
 
-		var row = document.createElement("div");
-		row.style.display = "flex";
-		row.style.flexDirection = "row";
-		row.style.flex = "1 0 200px";
-		row.style.backgroundColor = "green";
-		row.className = "row";
+	this.startDrag = function(event) {
+		//console.log("startDrag event:");
+		//console.log(event);
+		this.lastY = event.pageY;
+		this.dragStartTime = new Date().getTime();
+	}
 
-		container.appendChild(row);
-		pool.appendChild(container);
+	this.endDrag = function(event) {
+		//console.log("endDrag event:");
+		//console.dir(event);
 
-		this.createBoxes(container).then(function(container) {
+		var mult = new Date().getTime() - this.dragStartTime;
+		//console.log("mult: "+mult);
+
+		let currentY = event.pageY;
+
+		if(document.querySelector(".app>#container").scrollTop > 0 && currentY < this.lastY) { // DOWN
+			setTimedInterval(function() {
+				document.querySelector(".app>#container").scrollBy(0,10*(200/mult));
+			}, 5, 300);
+		}
+		else if(currentY > this.lastY) { // UP
+			setTimedInterval(function() {
+				document.querySelector(".app>#container").scrollBy(0,-10*(200/mult));
+			}, 5, 300);
+		}
+
+		this.lastY = currentY;
+	}
+
+	this.dragging = function(event) {
+		//console.log("dragingEvent:");
+		//console.dir(event);
+
+		//clearInterval(this.interval);
+		let currentY = event.touches[0].pageY;
+		/*if(currentY < this.lastY) { // DOWN
+			//document.querySelector(".app>#container").scrollBy(0,10);
+		}
+		else if(currentY > this.lastY) { // UP
+			//document.querySelector(".app>#container").scrollBy(0,-10);
+		}*/
+		this.lastY = currentY;
+	}
+
+	this.loadMore = function(event) {
+		if(this.debounce_timer) {
+      window.clearTimeout(this.debounce_timer);
+    }
+
+    this.debounce_timer = window.setTimeout(function() {
+      // run your actual function here
+      var forConsole = document.querySelector(".app>#container");
+			//console.log("scrollTop: " + forConsole.scrollTop + " clientHeight: " + forConsole.clientHeight + " scrollHeight: " + forConsole.scrollHeight);
+			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - window.innerHeight + 64) ? window.pool.createBoxes(true) : null;
+    }, 66); //MAYBE THIS IS HAPPENI
+	}
+
+	this.populate = function() {		
+		this.createBoxes(false).then(function() {
 			var targetContainer = document.querySelector(".app");
-    	targetContainer.appendChild(document.importNode(container, true));
+			targetContainer.innerHTML = "";
+    	targetContainer.appendChild(document.importNode(document.querySelector("#pool>#container"), true));
 		});
 	};
 }

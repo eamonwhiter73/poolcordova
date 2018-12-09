@@ -1,0 +1,16 @@
+{
+    "ios": {
+        "debug": {
+            "codeSignIdentity": "iPhone Development",
+            "provisioningProfile": "27a491b8-a0e8-409a-868e-7d9b4176b384",
+            "developmentTeam": "Eamon White (43ERHY6C2S)",
+            "packageType": "development"
+        },
+        "release": {
+            "codeSignIdentity": "iPhone Distribution",
+            "provisioningProfile": "27a491b8-a0e8-409a-868e-7d9b4176b384",
+            "developmentTeam": "Eamon White (6U9867H5L6)",
+            "packageType": "ad-hoc"
+        }
+    }
+}

@@ -18,7 +18,27 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-universal-links-plugin": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "com.eamon.pool",
+      "PACKAGE_NAME": "com.eamon.pool"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    }
+  }
 }
