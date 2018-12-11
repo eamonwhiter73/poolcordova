@@ -8,14 +8,11 @@ function Pool() {
 	this.total_boxes = 0;
 	this.debounce_timer = null;
 	this.lastY = 0;
-	this.lastScroll = 0;
 	this.interval = null;
-	this.startDragScrollTop = 0;
-	this.lastScrollTop = 0;
-	this.isScrolling = false;
-	this.setTimeout = null;
-	this.intervalEnded = true;
 	this.dragStartTime = null;
+	this.startScrollTopHold = 0;
+	this.absValue = 1;
+	this.mult = 1;
 
 	this.initialize = async function() { //MAKE ASYNC!!!!!!!!!!!!!!!!!!!
 		var pool = document.getElementById("pool");
@@ -32,8 +29,7 @@ function Pool() {
 		container.setAttribute("ontouchmove", "window.pool.dragging(event)");
 		container.setAttribute("ontouchend", "window.pool.endDrag(event)");
 		container.setAttribute("ontouchstart", "window.pool.startDrag(event)");
-		container.setAttribute("ontouchcancel", "window.pool.handleCancel(event)");
-		container.setAttribute("onscroll", "window.pool.loadMore(event)");
+		container.setAttribute("onscroll", "window.pool.loadMore()");
 
 		console.log("pool container created");
 
@@ -122,106 +118,103 @@ function Pool() {
 		}
 	}
 
-	this.handleCancel = function(event) {
-	  evt.preventDefault();
-	  console.log("touchcancel");
-	  var touches = evt.changedTouches;
-	  
-	  for (var i = 0; i < touches.length; i++) {
-	    var idx = ongoingTouchIndexById(touches[i].identifier);
-	    ongoingTouches.splice(idx, 1);  // remove it; we're done
-	  }
-	}
-
 	var setTimedInterval = function(callback, delay, timeout){
 		window.clearInterval(this.interval);
-		//this.intervalEnded = false;
     this.interval=window.setInterval(callback, delay);
     window.setTimeout(function(){
-    		console.log("this.interval at start: "+this.interval);
         window.clearInterval(this.interval);
-        //this.intervalEnded = true;
     }, timeout);
 	}
 
 	this.startDrag = function(event) {
-		//this.isScrolling = true;
-		console.log("scrollTop in startDrag: "+document.querySelector(".app>#container").scrollTop);
 		//console.log("startDrag event:");
 		//console.log(event);
-		//clearInterval(this.interval);
 		this.lastY = event.pageY;
-		this.startDragScrollTop = document.querySelector(".app>#container").scrollTop;
 		this.dragStartTime = new Date().getTime();
+		this.startScrollTopHold = document.querySelector(".app>#container").scrollTop;
 	}
 
 	this.endDrag = function(event) {
+		self = this;
 		//console.log("endDrag event:");
 		//console.dir(event);
-		//console.log("this.interval in endDrag: "+this.interval);
-		
-		/*if(!this.intervalEnded) {
-			return;
-		}*/
-		var mult = new Date().getTime() - this.dragStartTime;
-		console.log("mult: "+mult);
-
-		//this.timeout = setTimeout(function() {
-		console.log("scrollTop in endDrag: "+document.querySelector(".app>#container").scrollTop);
+		//self.endScrollTop = document.querySelector(".app>#container").scrollTop;
+		this.absValue = 1;
+		this.mult = new Date().getTime() - this.dragStartTime;
+		var initial_mult = this.mult;
+		//console.log("scrollBy: "+(mult/(Math.log10(Math.abs(this.endScrollTop - document.querySelector(".app>#container").scrollTop)))/4));
 
 		let currentY = event.pageY;
 
 		if(document.querySelector(".app>#container").scrollTop > 0 && currentY < this.lastY) { // DOWN
-			console.log("DOWN");
-			console.log("starting scroll top in endDrag: "+document.querySelector(".app>#container").scrollTop);
 			setTimedInterval(function() {
-				document.querySelector(".app>#container").scrollBy(0,10*(200/mult));
-				console.log("scrolls until: "+document.querySelector(".app>#container").scrollTop);
+				var exp1 = 200/Math.abs(self.absValue);
+				//var exp2 = Math.log2(exp1);
+				var exp = 24*exp1*(Math.abs(self.absValue)/self.mult); // /CUBE IT or QUAD IT!
+				//var exp = Math.log2((30*exp2)*);
+
+				console.log("exp1 in endDrag: "+exp1);
+				//console.log("exp2 in endDrag: "+exp2);
+				console.log("exp in endDrag: "+exp);
+				console.log("mult: "+self.mult);
+
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+					document.querySelector(".app>#container").scrollBy(0,exp);
+					self.absValue+=Math.floor(exp);
+					self.mult+=(Math.floor(exp) + 10);
+				}
+				else {
+					//document.querySelector(".app>#container").scrollBy(0,10);
+					//self.absValue+=10;
+				}
+				console.log("self.absValue down: "+self.absValue);
 			}, 5, 300);
 		}
 		else if(currentY > this.lastY) { // UP
-			console.log("UP");
 			setTimedInterval(function() {
-				document.querySelector(".app>#container").scrollBy(0,-10*(200/mult));
+				var exp1 = -200/Math.abs(self.absValue);
+				//var exp2 = Math.log2(exp1);
+				var exp = 24*exp1*(Math.abs(self.absValue)/self.mult);
+
+				console.log("exp1 in endDrag: "+exp1);
+				//console.log("exp2 in endDrag: "+exp2);
+				console.log("exp in endDrag: "+exp);
+				console.log("mult: "+self.mult);
+
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+					document.querySelector(".app>#container").scrollBy(0,exp);
+					self.absValue+=Math.floor(exp);
+					self.mult+=(-1*Math.floor(exp) + 10);
+				}
+				else {
+					//document.querySelector(".app>#container").scrollBy(0,-10);
+					//self.absValue-=10;
+				}
+				console.log("self.absValue up: "+self.absValue);
 			}, 5, 300);
 		}
 
 		this.lastY = currentY;
-		this.lastScrollTop = document.querySelector(".app>#container").scrollTop;
-		//}, 301);
 	}
 
 	this.dragging = function(event) {
-		//console.log("dragingEvent:");
-		//console.dir(event);
-
-		//clearInterval(this.interval);
 		let currentY = event.touches[0].pageY;
-		/*if(currentY < this.lastY) { // DOWN
-			//document.querySelector(".app>#container").scrollBy(0,10);
-		}
-		else if(currentY > this.lastY) { // UP
-			//document.querySelector(".app>#container").scrollBy(0,-10);
-		}*/
 		this.lastY = currentY;
 	}
 
-	this.loadMore = function(event) {
-		let currentScroll = window.scroll();
-
-		if(this.lastScroll == currentScroll) {
-			this.isScrolling = false;
-		}
-
-		this.lastScroll = currentScroll;
+	this.loadMore = function() {
+		var forConsole = document.querySelector(".app>#container");
+		this.absValue = forConsole.scrollTop - self.startScrollTopHold;
 
 		if(this.debounce_timer) {
       window.clearTimeout(this.debounce_timer);
     }
 
     this.debounce_timer = window.setTimeout(function() {
+			/*console.log("this.absValue in loadMore: "+self.absValue);
+			console.log("scrollTop in loadMore: "+forConsole.scrollTop);
+			console.log("startScrollTopHold in loadMore: "+self.startScrollTopHold);*/
       // run your actual function here
-      var forConsole = document.querySelector(".app>#container");
 			//console.log("scrollTop: " + forConsole.scrollTop + " clientHeight: " + forConsole.clientHeight + " scrollHeight: " + forConsole.scrollHeight);
 			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - window.innerHeight + 64) ? window.pool.createBoxes(true) : null;
     }, 66); //MAYBE THIS IS HAPPENI

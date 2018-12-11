@@ -3,13 +3,15 @@ function Pool() {
 									 {name: "Iron", pic: cordova.file.applicationDirectory + "www/assets/images/two.png", available: true}, {name: "Pot", pic: cordova.file.applicationDirectory + "www/assets/images/two.png", available: true},
 									 {name: "Stapler", pic: cordova.file.applicationDirectory + "www/assets/images/three.png", available: true}, {name: "Frying pan", pic: cordova.file.applicationDirectory + "www/assets/images/four.png", available: true},
 									 {name: "Sugar", pic: cordova.file.applicationDirectory + "www/assets/images/four.png", available: true}, {name: "Tape", pic: cordova.file.applicationDirectory + "www/assets/images/one.png", available: true}];
-	
 	this.total_rows = 1;
 	this.total_boxes = 0;
 	this.debounce_timer = null;
 	this.lastY = 0;
 	this.interval = null;
 	this.dragStartTime = null;
+	this.startScrollTopHold = 0;
+	this.absValue = 1;
+	this.mult = 1;
 
 	this.initialize = async function() { //MAKE ASYNC!!!!!!!!!!!!!!!!!!!
 		var pool = document.getElementById("pool");
@@ -26,8 +28,7 @@ function Pool() {
 		container.setAttribute("ontouchmove", "window.pool.dragging(event)");
 		container.setAttribute("ontouchend", "window.pool.endDrag(event)");
 		container.setAttribute("ontouchstart", "window.pool.startDrag(event)");
-		container.setAttribute("ontouchcancel", "window.pool.handleCancel(event)");
-		container.setAttribute("onscroll", "window.pool.loadMore(event)");
+		container.setAttribute("onscroll", "window.pool.loadMore()");
 
 		console.log("pool container created");
 
@@ -116,17 +117,6 @@ function Pool() {
 		}
 	}
 
-	this.handleCancel = function(event) {
-	  evt.preventDefault();
-	  console.log("touchcancel");
-	  var touches = evt.changedTouches;
-	  
-	  for (var i = 0; i < touches.length; i++) {
-	    var idx = ongoingTouchIndexById(touches[i].identifier);
-	    ongoingTouches.splice(idx, 1);  // remove it; we're done
-	  }
-	}
-
 	var setTimedInterval = function(callback, delay, timeout){
 		window.clearInterval(this.interval);
     this.interval=window.setInterval(callback, delay);
@@ -136,29 +126,59 @@ function Pool() {
 	}
 
 	this.startDrag = function(event) {
-		//console.log("startDrag event:");
-		//console.log(event);
 		this.lastY = event.pageY;
 		this.dragStartTime = new Date().getTime();
+		this.startScrollTopHold = document.querySelector(".app>#container").scrollTop;
 	}
 
 	this.endDrag = function(event) {
-		//console.log("endDrag event:");
-		//console.dir(event);
+		self = this;
 
-		var mult = new Date().getTime() - this.dragStartTime;
-		//console.log("mult: "+mult);
+		this.absValue = 1;
+		this.mult = new Date().getTime() - this.dragStartTime;
+		var initial_mult = this.mult;
 
 		let currentY = event.pageY;
 
 		if(document.querySelector(".app>#container").scrollTop > 0 && currentY < this.lastY) { // DOWN
 			setTimedInterval(function() {
-				document.querySelector(".app>#container").scrollBy(0,10*(200/mult));
+				var exp1 = 200/Math.abs(self.absValue);
+				//var exp2 = Math.log2(exp1);
+				var exp = 24*exp1*(Math.abs(self.absValue)/self.mult); // /CUBE IT or QUAD IT!
+				//var exp = Math.log2((30*exp2)*);
+
+				//console.log("exp1 in endDrag: "+exp1);
+				//console.log("exp2 in endDrag: "+exp2);
+				//console.log("exp in endDrag: "+exp);
+				//console.log("mult: "+self.mult);
+
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+					document.querySelector(".app>#container").scrollBy(0,exp);
+					self.absValue+=Math.floor(exp);
+					self.mult+=(Math.floor(exp) + 10);
+				}
+
+				//console.log("self.absValue down: "+self.absValue);
 			}, 5, 300);
 		}
 		else if(currentY > this.lastY) { // UP
 			setTimedInterval(function() {
-				document.querySelector(".app>#container").scrollBy(0,-10*(200/mult));
+				var exp1 = -200/Math.abs(self.absValue);
+				//var exp2 = Math.log2(exp1);
+				var exp = 24*exp1*(Math.abs(self.absValue)/self.mult);
+
+				//console.log("exp1 in endDrag: "+exp1);
+				//console.log("exp2 in endDrag: "+exp2);
+				//console.log("exp in endDrag: "+exp);
+				//console.log("mult: "+self.mult);
+
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+					document.querySelector(".app>#container").scrollBy(0,exp);
+					self.absValue+=Math.floor(exp);
+					self.mult+=(-1*Math.floor(exp) + 10);
+				}
+
+				//console.log("self.absValue up: "+self.absValue);
 			}, 5, 300);
 		}
 
@@ -166,31 +186,20 @@ function Pool() {
 	}
 
 	this.dragging = function(event) {
-		//console.log("dragingEvent:");
-		//console.dir(event);
-
-		//clearInterval(this.interval);
-		let currentY = event.touches[0].pageY;
-		/*if(currentY < this.lastY) { // DOWN
-			//document.querySelector(".app>#container").scrollBy(0,10);
-		}
-		else if(currentY > this.lastY) { // UP
-			//document.querySelector(".app>#container").scrollBy(0,-10);
-		}*/
-		this.lastY = currentY;
+		this.lastY = event.touches[0].pageY;
 	}
 
-	this.loadMore = function(event) {
+	this.loadMore = function() {
+		var forConsole = document.querySelector(".app>#container");
+		this.absValue = forConsole.scrollTop - self.startScrollTopHold;
+
 		if(this.debounce_timer) {
       window.clearTimeout(this.debounce_timer);
     }
 
     this.debounce_timer = window.setTimeout(function() {
-      // run your actual function here
-      var forConsole = document.querySelector(".app>#container");
-			//console.log("scrollTop: " + forConsole.scrollTop + " clientHeight: " + forConsole.clientHeight + " scrollHeight: " + forConsole.scrollHeight);
 			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - window.innerHeight + 64) ? window.pool.createBoxes(true) : null;
-    }, 66); //MAYBE THIS IS HAPPENI
+    }, 66);
 	}
 
 	this.populate = function() {		
