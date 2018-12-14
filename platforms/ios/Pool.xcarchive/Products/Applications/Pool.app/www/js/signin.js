@@ -1,7 +1,7 @@
 function SignIn() {
 	
 	this.data = {
-
+		signedInBefore: false
 	};
 	
 	this.initialize = async function() {
@@ -56,8 +56,16 @@ function SignIn() {
 		  	console.log("firebase user found");
 		    console.log("user from onAuthStateChanged: "+JSON.stringify(firebase_user));
 		    window.user = firebase_user;
-		    window.pool.populate();
+		    var storage = window.localStorage;
+				window.currentPoolId = storage.getItem("currentPoolId"); // Pass a key name to get its value.
+		    if(!window.signin.data.signedInBefore) {
+		    	window.pool.populate(false);
+		    }
+		    else {
+		    	window.signin.data.signedInBefore = false;
+		    }
 		    console.log("populated");
+		    window.signin.data.signedInBefore = true;
 		    return;
 		  }
 		  else {
@@ -72,11 +80,12 @@ function SignIn() {
 					  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
 					  var token = result.credential.accessToken;
 					  // The signed-in user info.
-					  var user = result.user;
-					  
+					  window.user = result.user;
+					 	window.user.pool = null;
+
 					  console.log("result.user: "+user); //////STORE USER IN DATABASE HERE!
 
-					  var uid = user.uid;
+					  var uid = window.user.uid;
 
 					  // Initialize Cloud Firestore through Firebase
 						var db = firebase.firestore();
@@ -87,10 +96,10 @@ function SignIn() {
 						});
 
 						// Add a new document in collection "cities"
-						db.collection("users").doc(uid).set(JSON.parse(JSON.stringify(user)))
+						db.collection("users").doc(uid).set(JSON.parse(JSON.stringify(window.user)))
 							.then(function() {
 						    console.log("Document successfully written!");
-						    window.pool.populate();
+						    window.signin.data.signedInBefore = true;
 						    return;
 							})
 							.catch(function(error) {
@@ -131,7 +140,7 @@ function SignIn() {
 				          return user.link(pendingCred);
 				        }).then(function() {
 				          // Facebook account successfully linked to the existing Firebase user.
-				          window.pool.populate();
+				          window.pool.populate(false);
 				        });
 				        return;
 				      }
@@ -156,7 +165,7 @@ function SignIn() {
 				          // Facebook account successfully linked to the existing Firebase user.
 				          
 				          console.log("usercred: "+usercred); //////STORE USER IN DATABASE HERE!
-				          window.pool.populate();
+				          window.pool.populate(false);
 				          return;
 				        });
 				      });

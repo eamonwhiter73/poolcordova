@@ -21,6 +21,7 @@ var tabbar = null;
 var share = null;
 var signin = null;
 var user = null;
+var currentPoolId = null;
 
 // Initialize Firebase
 // TODO: Replace with your project's customized code snippet

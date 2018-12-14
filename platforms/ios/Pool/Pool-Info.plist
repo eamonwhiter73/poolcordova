@@ -6,6 +6,17 @@
     <string>English</string>
     <key>CFBundleDisplayName</key>
     <string>Pool</string>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeName</key>
+        <string>MKDirectionsRequest</string>
+        <key>LSItemContentTypes</key>
+        <array>
+          <string>com.apple.maps.directionsrequest</string>
+        </array>
+      </dict>
+    </array>
     <key>CFBundleExecutable</key>
     <string>${EXECUTABLE_NAME}</string>
     <key>CFBundleIcons</key>
@@ -24,10 +35,36 @@
     <string>1.0.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.eamon.pool</string>
+        </array>
+      </dict>
+    </array>
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
+    <key>Google Places API Key</key>
+    <string>AIzaSyBWMfNEE1HqyDbEwfcPpreL9LksJNWiMJs</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>MKDirectionsApplicationSupportedModes</key>
+    <array>
+      <string>MKDirectionsModeBike</string>
+      <string>MKDirectionsModeBus</string>
+      <string>MKDirectionsModeCar</string>
+      <string>MKDirectionsModeFerry</string>
+      <string>MKDirectionsModeOther</string>
+      <string>MKDirectionsModePedestrian</string>
+      <string>MKDirectionsModePlane</string>
+      <string>MKDirectionsModeRideShare</string>
+      <string>MKDirectionsModeStreetCar</string>
+      <string>MKDirectionsModeSubway</string>
+      <string>MKDirectionsModeTaxi</string>
+      <string>MKDirectionsModeTrain</string>
+    </array>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
@@ -52,22 +89,17 @@
       <string>UIInterfaceOrientationPortraitUpsideDown</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.eamon.pool</string>
-        </array>
-      </dict>
-    </array>
     <key>NSCameraUsageDescription</key>
-    <string>need camera access to take pictures</string>
+    <string>Need camera access to take pictures</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>need photo library access to get pictures from there</string>
+    <string>Need photo library access to get pictures</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>need location access to find things nearby</string>
+    <string>Need location access to find pools nearby</string>
+    <key>NSLocationAlwaysInUseUsageDescription</key>
+    <string>Need location access always</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>need photo library access to save pictures there</string>
+    <string>Need photo library access to save pictures there</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Need location access always, and when app is in use</string>
   </dict>
 </plist>

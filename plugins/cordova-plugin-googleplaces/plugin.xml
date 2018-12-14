@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-googleplaces"
+        version="0.0.5">
+
+    <!-- General Info -->
+    <name>Google Places</name>
+    <description>Google places is a service by Google to lookup and contribute information about places.</description>
+    <license>MIT</license>
+    <keywords>ios,android,google,places,google places</keywords>
+
+    <!-- JS module -->
+    <js-module src="www/GooglePlaces.dist.js" name="GooglePlaces">
+        <clobbers target="cordova.plugins.GooglePlaces" />
+    </js-module>
+
+    <!-- Android support -->
+    <platform name="android">
+        <!-- Add API_KEY_FOR_ANDROID preference, copied to AndroidManifest.xml -->
+        <preference name="API_KEY_FOR_ANDROID" />
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+          <meta-data android:name="com.google.android.geo.API_KEY" android:value="$API_KEY_FOR_ANDROID" />
+        </config-file>
+        <!-- Google play is needed too -->
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+          <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        </config-file>
+
+        <!-- add dependencies to Gradle -->
+        <framework src="com.google.android.gms:play-services-maps:+" />
+        <framework src="com.google.android.gms:play-services-places:+" />
+
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+        <config-file target="res/xml/config.xml" parent="/*">
+          <feature name="GooglePlaces">
+            <param name="android-package" value="plugin.google.places.CordovaGooglePlaces" />
+            <param name="onload" value="true" />
+          </feature>
+        </config-file>
+        <source-file src="src/android/CordovaGooglePlaces.java" target-dir="src/plugin/google/places" />
+    </platform>
+
+    <!-- iOS support -->
+    <platform name="ios">
+        <!-- Add API_KEY_FOR_IOS preference, copied to Info.plist -->
+        <preference name="API_KEY_FOR_IOS" />
+        <config-file target="*-Info.plist" parent="Google Places API Key">
+          <string>$API_KEY_FOR_IOS</string>
+        </config-file>
+
+        <!-- Plugin code -->
+        <config-file target="config.xml" parent="/*">
+            <feature name="GooglePlaces">
+                <param name="ios-package" value="CDVGooglePlaces"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/CDVGooglePlaces.h"/>
+        <source-file src="src/ios/CDVGooglePlaces.m"/>
+
+        <!-- Install GooglePlaces as a pod -->
+        <framework src="GooglePlaces" type="podspec" spec="2.3.0" />
+        <framework src="GooglePlacePicker" type="podspec" spec="2.3.0" />
+    </platform>
+
+</plugin>

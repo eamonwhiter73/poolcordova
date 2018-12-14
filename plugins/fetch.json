@@ -80,5 +80,23 @@
     "variables": {
       "URL_SCHEME": "com.eamon.pool"
     }
+  },
+  "cordova-plugin-geolocation": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-geolocation@4.0.1"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-googleplaces": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-googleplaces@0.0.5"
+    },
+    "is_top_level": true,
+    "variables": {
+      "API_KEY_FOR_IOS": "AIzaSyBWMfNEE1HqyDbEwfcPpreL9LksJNWiMJs"
+    }
   }
 }

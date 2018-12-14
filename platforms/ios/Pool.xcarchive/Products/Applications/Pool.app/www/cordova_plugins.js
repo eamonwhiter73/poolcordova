@@ -1,6 +1,22 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
   {
+    "id": "cordova-plugin-browsertab.BrowserTab",
+    "file": "plugins/cordova-plugin-browsertab/www/browsertab.js",
+    "pluginId": "cordova-plugin-browsertab",
+    "clobbers": [
+      "cordova.plugins.browsertab"
+    ]
+  },
+  {
+    "id": "cordova-plugin-buildinfo.BuildInfo",
+    "file": "plugins/cordova-plugin-buildinfo/www/buildinfo.js",
+    "pluginId": "cordova-plugin-buildinfo",
+    "clobbers": [
+      "BuildInfo"
+    ]
+  },
+  {
     "id": "cordova-plugin-camera.Camera",
     "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
     "pluginId": "cordova-plugin-camera",
@@ -30,6 +46,14 @@ module.exports = [
     "pluginId": "cordova-plugin-camera",
     "clobbers": [
       "CameraPopoverHandle"
+    ]
+  },
+  {
+    "id": "cordova-plugin-customurlscheme.LaunchMyApp",
+    "file": "plugins/cordova-plugin-customurlscheme/www/ios/LaunchMyApp.js",
+    "pluginId": "cordova-plugin-customurlscheme",
+    "clobbers": [
+      "window.plugins.launchmyapp"
     ]
   },
   {
@@ -206,6 +230,15 @@ module.exports = [
     "runs": true
   },
   {
+    "id": "cordova-plugin-inappbrowser.inappbrowser",
+    "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+    "pluginId": "cordova-plugin-inappbrowser",
+    "clobbers": [
+      "cordova.InAppBrowser.open",
+      "window.open"
+    ]
+  },
+  {
     "id": "cordova-plugin-statusbar.statusbar",
     "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
     "pluginId": "cordova-plugin-statusbar",
@@ -222,52 +255,61 @@ module.exports = [
     ]
   },
   {
-    "id": "cordova-plugin-buildinfo.BuildInfo",
-    "file": "plugins/cordova-plugin-buildinfo/www/buildinfo.js",
-    "pluginId": "cordova-plugin-buildinfo",
+    "id": "cordova-plugin-geolocation.Coordinates",
+    "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
+    "pluginId": "cordova-plugin-geolocation",
     "clobbers": [
-      "BuildInfo"
+      "Coordinates"
     ]
   },
   {
-    "id": "cordova-plugin-browsertab.BrowserTab",
-    "file": "plugins/cordova-plugin-browsertab/www/browsertab.js",
-    "pluginId": "cordova-plugin-browsertab",
+    "id": "cordova-plugin-geolocation.PositionError",
+    "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
+    "pluginId": "cordova-plugin-geolocation",
     "clobbers": [
-      "cordova.plugins.browsertab"
+      "PositionError"
     ]
   },
   {
-    "id": "cordova-plugin-inappbrowser.inappbrowser",
-    "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-    "pluginId": "cordova-plugin-inappbrowser",
+    "id": "cordova-plugin-geolocation.Position",
+    "file": "plugins/cordova-plugin-geolocation/www/Position.js",
+    "pluginId": "cordova-plugin-geolocation",
     "clobbers": [
-      "cordova.InAppBrowser.open",
-      "window.open"
+      "Position"
     ]
   },
   {
-    "id": "cordova-plugin-customurlscheme.LaunchMyApp",
-    "file": "plugins/cordova-plugin-customurlscheme/www/ios/LaunchMyApp.js",
-    "pluginId": "cordova-plugin-customurlscheme",
+    "id": "cordova-plugin-geolocation.geolocation",
+    "file": "plugins/cordova-plugin-geolocation/www/geolocation.js",
+    "pluginId": "cordova-plugin-geolocation",
     "clobbers": [
-      "window.plugins.launchmyapp"
+      "navigator.geolocation"
+    ]
+  },
+  {
+    "id": "cordova-plugin-googleplaces.GooglePlaces",
+    "file": "plugins/cordova-plugin-googleplaces/www/GooglePlaces.dist.js",
+    "pluginId": "cordova-plugin-googleplaces",
+    "clobbers": [
+      "cordova.plugins.GooglePlaces"
     ]
   }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
+  "cordova-plugin-compat": "1.2.0",
+  "cordova-plugin-browsertab": "0.2.0",
+  "cordova-plugin-buildinfo": "2.0.2",
   "cordova-plugin-camera": "4.0.3",
+  "cordova-plugin-customurlscheme": "4.3.0",
   "cordova-plugin-file": "6.0.1",
+  "cordova-plugin-inappbrowser": "3.0.0",
   "cordova-plugin-statusbar": "2.4.2",
   "cordova-plugin-whitelist": "1.3.3",
   "cordova-universal-links-plugin": "1.2.1",
-  "cordova-plugin-buildinfo": "2.0.2",
-  "cordova-plugin-compat": "1.2.0",
-  "cordova-plugin-browsertab": "0.2.0",
-  "cordova-plugin-inappbrowser": "3.0.0",
-  "cordova-plugin-customurlscheme": "4.3.0"
+  "cordova-plugin-geolocation": "4.0.1",
+  "cordova-plugin-googleplaces": "0.0.5"
 };
 // BOTTOM OF METADATA
 });

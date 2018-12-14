@@ -1,0 +1,64 @@
+{
+  "_from": "cordova-plugin-googleplaces@0.0.5",
+  "_id": "cordova-plugin-googleplaces@0.0.5",
+  "_inBundle": false,
+  "_integrity": "sha512-q92NQXHQQ6KDhl0ZapAyQiJuuHaLBT+n0QgflNWwn6uZ+h/98KPZ/99MEDBxwDQ6UWlNg70BRDTVqYo3qTiN2Q==",
+  "_location": "/cordova-plugin-googleplaces",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "cordova-plugin-googleplaces@0.0.5",
+    "name": "cordova-plugin-googleplaces",
+    "escapedName": "cordova-plugin-googleplaces",
+    "rawSpec": "0.0.5",
+    "saveSpec": null,
+    "fetchSpec": "0.0.5"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-googleplaces/-/cordova-plugin-googleplaces-0.0.5.tgz",
+  "_shasum": "10cae1e311131f5d222ff1838d2ad38a4de11d79",
+  "_spec": "cordova-plugin-googleplaces@0.0.5",
+  "_where": "/Volumes/EamonWD/pool/pool",
+  "author": {
+    "name": "Aurélien Noce",
+    "email": "aurnoce@gmail.com",
+    "url": "https://github.com/ushu"
+  },
+  "bugs": {
+    "url": "https://github.com/ushu/cordova-plugin-googleplaces/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A Cordova plugin to access the native Google Places SDK",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "docco": "^0.7.0",
+    "lodash": "^4.17.4",
+    "prettier": "^1.7.4",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
+  },
+  "homepage": "https://github.com/ushu/cordova-plugin-googleplaces#readme",
+  "license": "MIT",
+  "name": "cordova-plugin-googleplaces",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ushu/cordova-plugin-googleplaces.git"
+  },
+  "scripts": {
+    "dist": "NODE_ENV=production rollup -c",
+    "doc": "docco www/GooglePlaces.js && mv docs/GooglePlaces.html docs/index.html",
+    "format": "prettier www/GooglePlaces.js --write --trailing-comma=all"
+  },
+  "version": "0.0.5"
+}

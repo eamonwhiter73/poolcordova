@@ -19,13 +19,18 @@ function Tabbar() {
 
 	this.navigate = function(event) {
 		if(event.target.id == "tab_0") {
-			navigator.camera.getPicture(cameraSuccess, cameraError, {
-				quality: 20, 
-				destinationType: Camera.DestinationType.FILE_URI,
-				sourceType:Camera.PictureSourceType.CAMERA
-			});
+			if(window.currentPoolId == null) {
+				alert("You need to be part of a pool to share an item");
+			}
+			else {
+				navigator.camera.getPicture(cameraSuccess, cameraError, {
+					quality: 20, 
+					destinationType: Camera.DestinationType.FILE_URI,
+					sourceType:Camera.PictureSourceType.CAMERA
+				});
 
-			document.getElementById("tab_0").style.pointerEvents = "none";
+				document.getElementById("tab_0").style.pointerEvents = "none";
+			}
 		}
 		else {
 			document.getElementById("tab_0").style.pointerEvents = "auto";

@@ -1,0 +1,14 @@
+{
+    "GooglePlaces": {
+        "name": "GooglePlaces",
+        "type": "podspec",
+        "spec": "2.3.0",
+        "count": 1
+    },
+    "GooglePlacePicker": {
+        "name": "GooglePlacePicker",
+        "type": "podspec",
+        "spec": "2.3.0",
+        "count": 1
+    }
+}

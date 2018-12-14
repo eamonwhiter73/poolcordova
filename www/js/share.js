@@ -3,7 +3,7 @@ function Share() {
 		uri: null,
 		item_name: null,
 		description_text: null,
-		available: true
+		active: true
 	};
 	
 	this.initialize = async function() {
@@ -16,11 +16,6 @@ function Share() {
 		container.style.display = "flex";
 		container.style.flexDirection = "column";
 		container.id = "container";
-
-		/*var form = document.createElement("form");
-		form.action = "";
-		form.id = "share_form";
-		form.setAttribute("onsubmit", "window.share.submitShare(event)");*/
 
 		var picContainer = document.createElement("div");
 		picContainer.style.display = "flex";
@@ -170,15 +165,15 @@ function Share() {
 	};
 
 	this.textAreaChange = function(value) {
-		this.data.description_text = value;
+		window.share.data.description_text = value;
 	}
 
 	this.inputItemNameChange = function(value) {
-		this.data.item_name = value;
+		window.share.data.item_name = value;
 	}
 
 	this.availableChange = function(value) {
-		this.data.available = value;
+		window.share.data.active = value;
 	}
 
 	this.submitShare = function(event) {
@@ -259,12 +254,19 @@ function Share() {
 				});
 
 				// Add a new document in collection "cities"
-				db.collection("shares").doc(window.user.uid).collection("data").doc(date).set({date: date, downloadURL: downloadURL, item: this.data.item_name, description: this.date.description_text, available: this.data.available})
+				db.collection("shares").doc(window.user.uid.toString()).collection("data").doc(date.toString()).set({date: date.toString(), downloadURL: downloadURL, item: window.share.data.item_name, description: window.share.data.description_text, active: window.share.data.active})
 					.then(function() {
-				    console.log("Document successfully written!");
-				    this.data.item_name = null;
-				    this.data.description_text = null;
-				    this.data.available = true;
+						db.collection("pools").doc(window.currentPoolId).collection("list").doc(date.toString()).set({date: date.toString(), downloadURL: downloadURL, item: window.share.data.item_name, description: window.share.data.description_text, active: window.share.data.active})
+							.then(function() {
+						    console.log("Document successfully written!");
+						    window.share.data.item_name = null;
+						    window.share.data.description_text = null;
+						    window.share.data.active = true;
+						    window.pool.populate(true);
+							})
+							.catch(function(error) {
+						    console.error("Error writing document: ", error);
+							});
 					})
 					.catch(function(error) {
 				    console.error("Error writing document: ", error);
@@ -288,6 +290,8 @@ function Share() {
 	this.showShare = function() {
 		self = this;
 		var targetContainer = document.querySelector(".app");
+		document.querySelector("#pool>#container").innerHTML = "";
+		document.querySelector("#pool>#container").appendChild(document.importNode(document.querySelector(".app>#container"), true));
 		targetContainer.innerHTML = "";
     targetContainer.appendChild(document.importNode(document.querySelector("#share>#container"), true));
     setTimeout(function() {

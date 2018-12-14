@@ -24,16 +24,22 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>need camera access to take pictures</string>
+            <string>Need camera access to take pictures</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>need photo library access to get pictures from there</string>
+            <string>Need photo library access to get pictures</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>need location access to find things nearby</string>
+            <string>Need location access to find pools nearby</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysInUseUsageDescription">
+            <string>Need location access always</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
-            <string>need photo library access to save pictures there</string>
+            <string>Need photo library access to save pictures there</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Need location access always, and when app is in use</string>
         </edit-config>
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarBackgroundColor" value="#bfbfbf" />
@@ -57,6 +63,10 @@
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="com.eamon.pool" />
+    </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="4.0.1" />
+    <plugin name="cordova-plugin-googleplaces" spec="0.0.5">
+        <variable name="API_KEY_FOR_IOS" value="AIzaSyBWMfNEE1HqyDbEwfcPpreL9LksJNWiMJs" />
     </plugin>
     <engine name="ios" spec="^4.5.5" />
 </widget>

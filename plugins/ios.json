@@ -7,10 +7,23 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
     "cordova-plugin-camera": {
       "PACKAGE_NAME": "com.eamon.pool"
     },
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "com.eamon.pool",
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
     "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.eamon.pool"
+    },
+    "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "com.eamon.pool"
     },
     "cordova-plugin-statusbar": {
@@ -22,17 +35,11 @@
     "cordova-universal-links-plugin": {
       "PACKAGE_NAME": "com.eamon.pool"
     },
-    "cordova-plugin-buildinfo": {
+    "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "com.eamon.pool"
     },
-    "cordova-plugin-browsertab": {
-      "PACKAGE_NAME": "com.eamon.pool"
-    },
-    "cordova-plugin-inappbrowser": {
-      "PACKAGE_NAME": "com.eamon.pool"
-    },
-    "cordova-plugin-customurlscheme": {
-      "URL_SCHEME": "com.eamon.pool",
+    "cordova-plugin-googleplaces": {
+      "API_KEY_FOR_IOS": "AIzaSyBWMfNEE1HqyDbEwfcPpreL9LksJNWiMJs",
       "PACKAGE_NAME": "com.eamon.pool"
     }
   },
