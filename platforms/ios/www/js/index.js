@@ -54,6 +54,10 @@ var app = {
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
 
+        Array.prototype.insert = function ( index, item ) {
+            this.splice( index, 0, item );
+        };
+
         universalLinks.subscribe(null, function (eventData) {
           // do some work
             console.log('Did launch application from the link: ' + eventData.url);

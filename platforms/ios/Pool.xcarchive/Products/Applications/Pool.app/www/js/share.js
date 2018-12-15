@@ -262,7 +262,8 @@ function Share() {
 						    window.share.data.item_name = null;
 						    window.share.data.description_text = null;
 						    window.share.data.active = true;
-						    window.pool.populate(true);
+						    //document.querySelector(".app>#container").innerHTML = "";
+						    //window.pool.populate(true); // REMOVE THIS MAYBE BECAUSE OF ONSNASPSHOT!!!!!!!
 							})
 							.catch(function(error) {
 						    console.error("Error writing document: ", error);

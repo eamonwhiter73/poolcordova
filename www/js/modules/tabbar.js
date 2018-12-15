@@ -24,7 +24,7 @@ function Tabbar() {
 			}
 			else {
 				navigator.camera.getPicture(cameraSuccess, cameraError, {
-					quality: 20, 
+					quality: 10, 
 					destinationType: Camera.DestinationType.FILE_URI,
 					sourceType:Camera.PictureSourceType.CAMERA
 				});

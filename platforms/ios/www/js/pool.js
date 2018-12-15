@@ -19,6 +19,8 @@ function Pool() {
 	this.pool_name = null;
 	this.nearestPlace = null;
 	this.myPosition = null;
+	this.lastDateIndex = 0;
+	this.last_total_rows = 0;
 
 	this.initialize = async function() { //MAKE ASYNC!!!!!!!!!!!!!!!!!!!
 		var pool = document.getElementById("pool");
@@ -58,10 +60,36 @@ function Pool() {
 		  timestampsInSnapshots: true
 		});
 
-		db.collection("list")
+		db.collection("pools").doc(window.currentPoolId).collection("list")
 	    .onSnapshot(function(snapshot) {
-	        console.log("snapshot when something is added:");
-	        console.dir(snapshot);
+        console.log("snapshot when something is added:");
+        console.dir(snapshot);
+
+        var cou = 0;
+        window.pool.last_total_rows = window.pool.total_rows;
+
+        snapshot.docChanges().forEach(function(change) {
+          if (change.type === "added") {
+            console.log("New: ", change.doc.data());
+            if(window.pool.data.length != 0) {
+            	window.pool.data.insert(0, change.doc.data());
+            }
+          }
+          if (change.type === "modified") {
+              console.log("Modified city: ", change.doc.data());
+          }
+          if (change.type === "removed") {
+              console.log("Removed city: ", change.doc.data());
+          }
+
+          if(cou == snapshot.docChanges().size - 1) {
+          	window.pool.createBoxes("shifting").then(function() {
+           		window.pool.showPool("adding");
+           	});
+          }
+
+          cou++;
+      	});
 	    }, function(error) {
 	        console.log("error with onSnapshot: "+error);
 	    });
@@ -70,6 +98,7 @@ function Pool() {
 	}
 
 	this.createBoxes = async function(load) {
+		var added_row = false;
 		var pool_var = null;
 		/*if(load) {
 			pool_var = document.querySelector(".app>#container");
@@ -82,6 +111,7 @@ function Pool() {
 		console.log("window.pool.total_boxes: "+window.pool.total_boxes);
 		console.log("window.pool.data.length: "+window.pool.data.length);
 		//console.log("window.pool.data[0].downloadURL: "+JSON.stringify(window.pool.data[window.pool.total_boxes].downloadURL));
+		
 
 		for (var i = 1; this.total_boxes < window.pool.data.length; i++) {
 
@@ -127,17 +157,56 @@ function Pool() {
 
 			console.log("window.pool.total_rows: "+window.pool.total_rows);
 			//console.log("length of row elements: "+pool_var.getElementsByClassName("row").length);
-			console.log("item_box: "+item_box);
 
-			pool_var.getElementsByClassName("row")[window.pool.total_rows - 1].appendChild(item_box);
-			pool_var.getElementsByClassName("row")[window.pool.total_rows - 1].style.display = "flex";
+			if(load == "shifting") {
+				window.pool.in_box_shift = true;
+				if(window.pool.data.length % 2 != 0) {
+					var item = null;
+					for(var c = 0; c < window.pool.total_rows; c++) {
+						if(c != 0) {
+							//pool_var.getElementsByClassName("row")[c].insertBefore(last_item_box, pool_var.getElementsByClassName("row")[c+1].childNodes[0]));
+							item = pool_var.getElementsByClassName("row")[c - 1].childNodes[2];
+							pool_var.getElementsByClassName("row")[c].insertBefore(item, pool_var.getElementsByClassName("row")[c].childNodes[0]);
+							pool_var.getElementsByClassName("row")[c - 1].childNodes[2].remove();
+
+							if(c == window.pool.total_rows - 1 && pool_var.getElementsByClassName("row")[c].childNodes.length == 3) {
+								item = pool_var.getElementsByClassName("row")[c].childNodes[2];
+								pool_var.getElementsByClassName("row")[c].childNodes[2].remove();
+
+								window.pool.total_rows++;
+
+								var row_added = document.createElement("div");
+								row_added.style.display = "flex";
+								row_added.style.flexDirection = "row";
+								row_added.style.flex = "0.94";
+								row_added.style.backgroundColor = "green";
+								row_added.className = "row";
+								row_added.style.minHeight = (window.innerHeight - 63) / 2 + "px";
+								row_added.id = "row_"+window.pool.total_rows
+
+								row_added.appendChild(item);
+								pool_var.appendChild(row_added);
+
+								added_row = true;
+							}
+						}
+						else {
+							pool_var.getElementsByClassName("row")[c].insertBefore(item_box, pool_var.getElementsByClassName("row")[c].childNodes[0]);
+						}
+					}
+				}
+			}
+			else if(load == "initial" || load == "adding") {
+				pool_var.getElementsByClassName("row")[window.pool.total_rows - 1].appendChild(item_box);
+				pool_var.getElementsByClassName("row")[window.pool.total_rows - 1].style.display = "flex";
+			}
 
 			window.pool.total_boxes++;
 
 			console.log("window.pool.total_boxes inside loop: "+window.pool.total_boxes);
 			console.log("window.pool.data.length: "+window.pool.data.length);
 
-			if(i % 2 == 0) {				
+			if(i % 2 == 0 && !added_row) {				
 				var inner_row = document.createElement("div");
 				inner_row.style.display = "none";
 				inner_row.style.flexDirection = "row";
@@ -179,6 +248,8 @@ function Pool() {
 		var initial_mult = this.mult;
 
 		let currentY = event.pageY;
+		console.log("scroll length in endDrag: "+(Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold)))
+
 
 		if(document.querySelector(".app>#container").scrollTop > 0 && currentY < this.lastY) { // DOWN
 			setTimedInterval(function() {
@@ -192,7 +263,7 @@ function Pool() {
 				//console.log("exp in endDrag: "+exp);
 				//console.log("mult: "+self.mult);
 
-				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 10) {
 					document.querySelector(".app>#container").scrollBy(0,exp);
 					self.absValue+=Math.floor(exp);
 					self.mult+=(Math.floor(exp) + 10);
@@ -212,7 +283,7 @@ function Pool() {
 				//console.log("exp in endDrag: "+exp);
 				//console.log("mult: "+self.mult);
 
-				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 15) {
+				if(initial_mult < 200 && Math.abs(document.querySelector(".app>#container").scrollTop - self.startScrollTopHold) > 10) {
 					document.querySelector(".app>#container").scrollBy(0,exp);
 					self.absValue+=Math.floor(exp);
 					self.mult+=(-1*Math.floor(exp) + 10);
@@ -233,16 +304,26 @@ function Pool() {
 		var forConsole = document.querySelector(".app>#container");
 		this.absValue = forConsole.scrollTop - self.startScrollTopHold;
 
+		console.log("forConsole.scrollTop: "+forConsole.scrollTop);
+		console.log("forConsole.clientHeight: "+forConsole.clientHeight);
+		console.log("forConsole.scrollHeight: "+forConsole.scrollHeight);
+		console.log("equation left: "+(forConsole.scrollTop + forConsole.clientHeight));
+		console.log("equation right: "+(forConsole.scrollHeight - window.innerHeight + 64));
+		console.log("left should be greater than or equal to right");
+
 		if(this.debounce_timer) {
       window.clearTimeout(this.debounce_timer);
     }
 
     this.debounce_timer = window.setTimeout(function() {
-			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - (window.innerHeight + 63) * 2) ? window.pool.populate(true) : null;
-    }, 66);
+			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - window.innerHeight + 64) ? window.pool.populate("adding") : null;
+    }, 100);
 	}
 
-	this.loadData = async function() {
+	this.loadData = async function() { //MAKE SURE TO ONLY PUSH THE ONES THAT ARE BEING ADDED
+
+		window.pool.last_total_rows = window.pool.total_rows;
+
 		var db = firebase.firestore();
 
 		// Disable deprecated features
@@ -250,24 +331,34 @@ function Pool() {
 		  timestampsInSnapshots: true
 		});
 
-		var docsRef = db.collection("pools").doc(window.currentPoolId).collection("list").where("active", "==", true).orderBy("date", "desc").limit(8);
+		var docsRef = null;
+
+		if(window.pool.data.length == 0) {
+			docsRef = db.collection("pools").doc(window.currentPoolId).collection("list").where("active", "==", true).orderBy("date", "desc").limit(8);
+		}
+		else {
+			console.log("window.pool.lastDateIndex: "+window.pool.lastDateIndex);
+			docsRef = db.collection("pools").doc(window.currentPoolId).collection("list").where("active", "==", true).orderBy("date", "desc").startAfter(window.pool.lastDateIndex).limit(8);
+		}
+
 		var counter = 0;
 		var result = await docsRef.get();
-
-		console.log("result in loadData: "+result);
 
 		//promise.then(function(querySnapshot) {
 		return new Promise(function(resolve, reject) {
 			result.forEach(function(doc) {
 	        // doc.data() is never undefined for query doc snapshots
 	        console.log(doc.id, " => ", doc.data());
+	        //if(counter >= window.pool.last_total_boxes) {
 	        window.pool.data.push(doc.data());
+	        //}
 
 	        console.log("result.size: "+result.size);
 	        console.log("self.data.length: "+window.pool.data.length);
 	        console.log("index in loadData: "+counter);
 	        if(result.size - 1 == counter) {
 	        	console.log("returning self data: "+JSON.stringify(window.pool.data));
+	        	window.pool.lastDateIndex = doc.data().date;
 	        	resolve(window.pool.data);
 	        }
 
@@ -473,18 +564,20 @@ function Pool() {
 			//document.querySelector("#pool>#container").appendChild(pickAPool);
 			document.querySelector("#pool>#container").appendChild(startAPool);
 
-			window.pool.showPool(false);
+			window.pool.showPool("copying");
 			return;
 		}
 		else {
+			window.pool.last_total_boxes = window.pool.data.length;
 			var result = await window.pool.loadData();
 
-			console.log("result in populate else: "+result);
+			console.log("window.pool.last_total_boxes in populate else: "+window.pool.last_total_boxes);
+			console.log("window.pool.result.length in populate else: "+result.length);
 			//promise.then(function(datar) {
 				//document.querySelector(".app>#container").innerHTML = "";
 				if(result.length != 0) {
-					window.pool.last_total_boxes = window.pool.total_boxes;
-					await window.pool.createBoxes();
+					//window.pool.last_total_boxes = window.pool.data.length;
+					await window.pool.createBoxes(load);
 					window.pool.showPool(load);
 					return;
 				}
@@ -497,16 +590,32 @@ function Pool() {
 	};
 
 	this.showPool = function(load) {
-		if(load) {
-			for(var count = this.total_rows - 4; count < this.total_rows; count++) {
+		if(load == "adding") {
+			for(var count = this.last_total_rows - 1; count < this.total_rows - 1; count++) {
+				console.log("count in showPool: "+count);
+				console.log("this.total_rows in showPool: "+this.total_rows);
+				console.log("this.last_total_rows in showPool: "+this.last_total_rows);
 				document.querySelector(".app>#container").appendChild(document.importNode(document.querySelector("#pool>#container").getElementsByClassName("row")[count], true));
 			}
-			window.pool.last_total_boxes = window.pool.data.length;
 		}
-		else {
+		else if(load == "copying") {
 			var targetContainer = document.querySelector(".app");
 			targetContainer.innerHTML = "";
-	  	targetContainer.appendChild(document.importNode(document.querySelector("#pool>#container"), true)); 
+	  	targetContainer.appendChild(document.importNode(document.querySelector("#pool>#container"), true));
 		}
+		else if(load == "initial") {
+			var targetContainerInitial = document.querySelector(".app");
+			targetContainerInitial.innerHTML = "";
+	  	targetContainerInitial.appendChild(document.importNode(document.querySelector("#pool>#container"), false));
+
+	  	for(var coun = this.last_total_rows - 1; coun < this.total_rows - 1; coun++) {
+				console.log("count in showPool: "+coun);
+				console.log("this.total_rows in showPool: "+this.total_rows);
+				console.log("this.last_total_rows in showPool: "+this.last_total_rows);
+				document.querySelector(".app>#container").appendChild(document.importNode(document.querySelector("#pool>#container").getElementsByClassName("row")[coun], true));
+			}
+		}
+
+		//window.pool.last_total_boxes = window.pool.data.length;
 	}
 }

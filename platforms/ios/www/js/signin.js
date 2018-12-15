@@ -59,7 +59,8 @@ function SignIn() {
 		    var storage = window.localStorage;
 				window.currentPoolId = storage.getItem("currentPoolId"); // Pass a key name to get its value.
 		    if(!window.signin.data.signedInBefore) {
-		    	window.pool.populate(false);
+		    	console.log("inside !window.signin.data.signedInBefore");
+		    	window.pool.populate("initial");
 		    }
 		    else {
 		    	window.signin.data.signedInBefore = false;
@@ -140,7 +141,7 @@ function SignIn() {
 				          return user.link(pendingCred);
 				        }).then(function() {
 				          // Facebook account successfully linked to the existing Firebase user.
-				          window.pool.populate(false);
+				          window.pool.populate("initial");
 				        });
 				        return;
 				      }
@@ -165,7 +166,7 @@ function SignIn() {
 				          // Facebook account successfully linked to the existing Firebase user.
 				          
 				          console.log("usercred: "+usercred); //////STORE USER IN DATABASE HERE!
-				          window.pool.populate(false);
+				          window.pool.populate("initial");
 				          return;
 				        });
 				      });
