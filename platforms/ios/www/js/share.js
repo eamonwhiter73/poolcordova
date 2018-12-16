@@ -262,6 +262,7 @@ function Share() {
 						    window.share.data.item_name = null;
 						    window.share.data.description_text = null;
 						    window.share.data.active = true;
+						    document.querySelector("#tabbar>#tab_0").style.pointerEvents = "auto";
 						    //document.querySelector(".app>#container").innerHTML = "";
 						    //window.pool.populate(true); // REMOVE THIS MAYBE BECAUSE OF ONSNASPSHOT!!!!!!!
 							})
@@ -291,8 +292,8 @@ function Share() {
 	this.showShare = function() {
 		self = this;
 		var targetContainer = document.querySelector(".app");
-		document.querySelector("#pool>#container").innerHTML = "";
-		document.querySelector("#pool>#container").appendChild(document.importNode(document.querySelector(".app>#container"), true));
+		//document.querySelector("#pool>#container").innerHTML = "";
+		//document.querySelector("#pool>#container").appendChild(document.importNode(document.querySelector(".app>#container"), true));
 		targetContainer.innerHTML = "";
     targetContainer.appendChild(document.importNode(document.querySelector("#share>#container"), true));
     setTimeout(function() {

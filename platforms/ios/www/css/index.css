@@ -38,6 +38,7 @@ body {
     width: 101.9%;
     background-color: black;
     padding-bottom: 64px;
+    padding-top: 20px;
 }
 
 /* Landscape layout (with min-width) */

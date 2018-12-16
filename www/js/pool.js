@@ -66,13 +66,13 @@ function Pool() {
         console.dir(snapshot);
 
         var cou = 0;
-        window.pool.last_total_rows = window.pool.total_rows;
+        //window.pool.last_total_rows = window.pool.total_rows;
 
         snapshot.docChanges().forEach(function(change) {
           if (change.type === "added") {
             console.log("New: ", change.doc.data());
             if(window.pool.data.length != 0) {
-            	window.pool.data.insert(0, change.doc.data());
+            	window.pool.data.push(change.doc.data());
             }
           }
           if (change.type === "modified") {
@@ -82,9 +82,10 @@ function Pool() {
               console.log("Removed city: ", change.doc.data());
           }
 
-          if(cou == snapshot.docChanges().size - 1) {
+          if(cou == snapshot.docChanges().length - 1) {
+          	window.pool.last_total_rows = window.pool.total_rows;
           	window.pool.createBoxes("shifting").then(function() {
-           		window.pool.showPool("adding");
+          		window.pool.showPool("copying");
            	});
           }
 
@@ -159,17 +160,27 @@ function Pool() {
 			//console.log("length of row elements: "+pool_var.getElementsByClassName("row").length);
 
 			if(load == "shifting") {
-				window.pool.in_box_shift = true;
-				if(window.pool.data.length % 2 != 0) {
+				//if(window.pool.data.length % 2 != 0) {
 					var item = null;
 					for(var c = 0; c < window.pool.total_rows; c++) {
 						if(c != 0) {
-							//pool_var.getElementsByClassName("row")[c].insertBefore(last_item_box, pool_var.getElementsByClassName("row")[c+1].childNodes[0]));
-							item = pool_var.getElementsByClassName("row")[c - 1].childNodes[2];
-							pool_var.getElementsByClassName("row")[c].insertBefore(item, pool_var.getElementsByClassName("row")[c].childNodes[0]);
-							pool_var.getElementsByClassName("row")[c - 1].childNodes[2].remove();
+							console.log("c: "+c+" c-1: "+(c-1));
+							
+							if(c > 1) {
+								item = pool_var.getElementsByClassName("row")[c - 1].childNodes[2];
+								pool_var.getElementsByClassName("row")[c].insertBefore(item, pool_var.getElementsByClassName("row")[c].childNodes[0]);
+								//pool_var.getElementsByClassName("row")[c - 1].childNodes[2].remove();
+								//item = pool_var.getElementsByClassName("row")[c].childNodes[2];
+							}
+							else {
+								item = pool_var.getElementsByClassName("row")[c - 1].childNodes[2];
+								pool_var.getElementsByClassName("row")[c].insertBefore(item, pool_var.getElementsByClassName("row")[c].childNodes[0]);
+								//pool_var.getElementsByClassName("row")[c - 1].childNodes[2].remove();
+								//item = pool_var.getElementsByClassName("row")[c].childNodes[2];
+							}
 
-							if(c == window.pool.total_rows - 1 && pool_var.getElementsByClassName("row")[c].childNodes.length == 3) {
+							console.log("pool_var.getElementsByClassName('row')[c].childNodes.length: "+pool_var.getElementsByClassName("row")[c].childNodes.length);
+							/*if(c == window.pool.total_rows - 1 && pool_var.getElementsByClassName("row")[c].childNodes.length == 1) {
 								item = pool_var.getElementsByClassName("row")[c].childNodes[2];
 								pool_var.getElementsByClassName("row")[c].childNodes[2].remove();
 
@@ -188,13 +199,14 @@ function Pool() {
 								pool_var.appendChild(row_added);
 
 								added_row = true;
-							}
+							}*/
+							pool_var.getElementsByClassName("row")[c].style.display = "flex";
 						}
 						else {
 							pool_var.getElementsByClassName("row")[c].insertBefore(item_box, pool_var.getElementsByClassName("row")[c].childNodes[0]);
 						}
 					}
-				}
+				//}
 			}
 			else if(load == "initial" || load == "adding") {
 				pool_var.getElementsByClassName("row")[window.pool.total_rows - 1].appendChild(item_box);
@@ -206,7 +218,7 @@ function Pool() {
 			console.log("window.pool.total_boxes inside loop: "+window.pool.total_boxes);
 			console.log("window.pool.data.length: "+window.pool.data.length);
 
-			if(i % 2 == 0 && !added_row) {				
+			if(window.pool.total_boxes % 2 == 0 /*&& !added_row*/) {				
 				var inner_row = document.createElement("div");
 				inner_row.style.display = "none";
 				inner_row.style.flexDirection = "row";
@@ -304,19 +316,12 @@ function Pool() {
 		var forConsole = document.querySelector(".app>#container");
 		this.absValue = forConsole.scrollTop - self.startScrollTopHold;
 
-		console.log("forConsole.scrollTop: "+forConsole.scrollTop);
-		console.log("forConsole.clientHeight: "+forConsole.clientHeight);
-		console.log("forConsole.scrollHeight: "+forConsole.scrollHeight);
-		console.log("equation left: "+(forConsole.scrollTop + forConsole.clientHeight));
-		console.log("equation right: "+(forConsole.scrollHeight - window.innerHeight + 64));
-		console.log("left should be greater than or equal to right");
-
 		if(this.debounce_timer) {
       window.clearTimeout(this.debounce_timer);
     }
 
     this.debounce_timer = window.setTimeout(function() {
-			(forConsole.scrollTop + forConsole.clientHeight >= forConsole.scrollHeight - window.innerHeight + 64) ? window.pool.populate("adding") : null;
+			(forConsole.scrollTop >= forConsole.scrollHeight - window.innerHeight - 64) ? window.pool.populate("adding") : null;
     }, 100);
 	}
 
@@ -591,11 +596,19 @@ function Pool() {
 
 	this.showPool = function(load) {
 		if(load == "adding") {
-			for(var count = this.last_total_rows - 1; count < this.total_rows - 1; count++) {
-				console.log("count in showPool: "+count);
+			var count = 0;
+
+			if(this.total_boxes % 2 == 0) {
+				count = this.total_rows - 1;
+			}
+			else {
+				count = this.total_rows;
+			}
+			for(var row_it = this.last_total_rows - 1; row_it < count; row_it++) {
+				console.log("count in showPool: "+row_it);
 				console.log("this.total_rows in showPool: "+this.total_rows);
 				console.log("this.last_total_rows in showPool: "+this.last_total_rows);
-				document.querySelector(".app>#container").appendChild(document.importNode(document.querySelector("#pool>#container").getElementsByClassName("row")[count], true));
+				document.querySelector(".app>#container").appendChild(document.importNode(document.querySelector("#pool>#container").getElementsByClassName("row")[row_it], true));
 			}
 		}
 		else if(load == "copying") {
@@ -616,6 +629,6 @@ function Pool() {
 			}
 		}
 
-		//window.pool.last_total_boxes = window.pool.data.length;
+		//window.pool.last_total_rows = window.pool.last_total_rows;
 	}
 }
